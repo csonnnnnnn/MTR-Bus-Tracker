@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTR Bus Tracker</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+    <script src="routes-config.js"></script>
+    <body>
+    <h1>MTR Bus Tracker</h1>
+    <div class="search-container">
+        <input type="text" id="busIdInput" placeholder="輸入編號搜尋">
+        <button id="searchButton">搜尋</button>
+    </div>
+    <div id="lastUpdate">最後更新：載入中...</div>
+    <div class="container">
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+        <div id="table-container">
+            <div id="buttons-container">
+                <button class="model-button" onclick="showModel('E400')">E400</button>
+                <button class="model-button" onclick="showModel('B9TL')">B9TL</button>
+                <button class="model-button" onclick="showModel('E500MMC_11.3m')">E500MMC 11.3m</button>
+                <button class="model-button" onclick="showModel('E500MMCFL_11.3m')">E500MMCFL 11.3m</button>
+                <button class="model-button" onclick="showModel('E500_12m')">E500 12m</button>
+                <button class="model-button" onclick="showModel('E500_11.3m')">E500 11.3m</button>
+                <button class="model-button" onclick="showModel('E500MMCFL_12m')">E500MMCFL 12m</button>
+                <button class="model-button" onclick="showModel('E200')">E200</button>
+                <button class="model-button" onclick="showModel('E500EV')">E500EV</button>
+            </div>
+            
+            <section class="model-section" id="section-E400">
+                <table class="model-table" id="table-E400">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="140"><td>140</td><td>RJ 7286</td><td id="route-140"></td><td id="direction-140"></td><td id="last-updated-140"></td></tr>
+                        <tr data-busid="141"><td>141</td><td>RJ 6613</td><td id="route-141"></td><td id="direction-141"></td><td id="last-updated-141"></td></tr>
+                        <tr data-busid="142"><td>142</td><td>RN 3226</td><td id="route-142"></td><td id="direction-142"></td><td id="last-updated-142"></td></tr>
+                        <tr data-busid="143"><td>143</td><td>RN 4128</td><td id="route-143"></td><td id="direction-143"></td><td id="last-updated-143"></td></tr>
+                        <tr data-busid="144"><td>144</td><td>RP 2529</td><td id="route-144"></td><td id="direction-144"></td><td id="last-updated-144"></td></tr>
+                        <tr data-busid="145"><td>145</td><td>RP 3662</td><td id="route-145"></td><td id="direction-145"></td><td id="last-updated-145"></td></tr>
+                        <tr data-busid="146"><td>146</td><td>RP 2851</td><td id="route-146"></td><td id="direction-146"></td><td id="last-updated-146"></td></tr>
+                        <tr><td>147</td ><td>RP 3460</td><td></td><td></td><td>已退役</td></tr>
+                        <tr data-busid="148"><td>148</td><td>RP 8749</td><td id="route-148"></td><td id="direction-148"></td><td id="last-updated-148"></td></tr>
+                        <tr data-busid="149"><td>149</td><td>VN 1174</td><td id="route-149"></td><td id="direction-149"></td><td id="last-updated-149"></td></tr>
+                        <tr data-busid="150"><td>150</td><td>VN 2092</td><td id="route-150"></td><td id="direction-150"></td><td id="last-updated-150"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="model-section" id="section-B9TL">
+                <table class="model-table" id="table-B9TL">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="319"><td>319</td><td>TX 4303</td><td id="route-319"></td><td id="direction-319"></td><td id="last-updated-319"></td></tr>
+                        <tr data-busid="320"><td>320</td><td>TX 6473</td><td id="route-320"></td><td id="direction-320"></td><td id="last-updated-320"></td></tr>
+                        <tr data-busid="321"><td>321</td><td>TZ 4100</td><td id="route-321"></td><td id="direction-321"></td><td id="last-updated-321"></td></tr>
+                        <tr data-busid="322"><td>322</td><td>TY 7838</td><td id="route-322"></td><td id="direction-322"></td><td id="last-updated-322"></td></tr>
+                        <tr data-busid="323"><td>323</td><td>TZ 1572</td><td id="route-323"></td><td id="direction-323"></td><td id="last-updated-323"></td></tr>
+                        <tr data-busid="324"><td>324</td><td>TZ 1884</td><td id="route-324"></td><td id="direction-324"></td><td id="last-updated-324"></td></tr>
+                        <tr data-busid="325"><td>325</td><td>TZ 1574</td><td id="route-325"></td><td id="direction-325"></td><td id="last-updated-325"></td></tr>
+                        <tr data-busid="326"><td>326</td><td>TY 8100</td><td id="route-326"></td><td id="direction-326"></td><td id="last-updated-326"></td></tr>
+                        <tr data-busid="327"><td>327</td><td>TZ 4437</td><td id="route-327"></td><td id="direction-327"></td><td id="last-updated-327"></td></tr>
+                        <tr data-busid="328"><td>328</td><td>TZ 2574</td><td id="route-328"></td><td id="direction-328"></td><td id="last-updated-328"></td></tr>
+                        <tr data-busid="329"><td>329</td><td>UA 6958</td><td id="route-329"></td><td id="direction-329"></td><td id="last-updated-329"></td></tr>
+                        <tr data-busid="330"><td>330</td><td>UB 4596</td><td id="route-330"></td><td id="direction-330"></td><td id="last-updated-330"></td></tr>
+                        <tr data-busid="331"><td>331</td><td>UB 5808</td><td id="route-331"></td><td id="direction-331"></td><td id="last-updated-331"></td></tr>
+                        <tr data-busid="332"><td>332</td><td>UD 5933</td><td id="route-332"></td><td id="direction-332"></td><td id="last-updated-332"></td></tr>
+                        <tr data-busid="333"><td>333</td><td>UD 5100</td><td id="route-333"></td><td id="direction-333"></td><td id="last-updated-333"></td></tr>
+                        <tr data-busid="334"><td>334</td><td>UF 8496</td><td id="route-334"></td><td id="direction-334"></td><td id="last-updated-334"></td></tr>
+                        <tr data-busid="335"><td>335</td><td>UE 8084</td><td id="route-335"></td><td id="direction-335"></td><td id="last-updated-335"></td></tr>
+                        <tr data-busid="336"><td>336</td><td>UF 7737</td><td id="route-336"></td><td id="direction-336"></td><td id="last-updated-336"></td></tr>
+                        <tr data-busid="337"><td>337</td><td>UF 7298</td><td id="route-337"></td><td id="direction-337"></td><td id="last-updated-337"></td></tr>
+                        <tr data-busid="338"><td>338</td><td>UE 8310</td><td id="route-338"></td><td id="direction-338"></td><td id="last-updated-338"></td></tr>
+                        <tr data-busid="339"><td>339</td><td>UE 6714</td><td id="route-339"></td><td id="direction-339"></td><td id="last-updated-339"></td></tr>
+                        <tr data-busid="340"><td>340</td><td>UG 5068</td><td id="route-340"></td><td id="direction-340"></td><td id="last-updated-340"></td></tr>
+                        <tr data-busid="341"><td>341</td><td>UG 5621</td><td id="route-341"></td><td id="direction-341"></td><td id="last-updated-341"></td></tr>
+                        <tr data-busid="342"><td>342</td><td>UG 5808</td><td id="route-342"></td><td id="direction-342"></td><td id="last-updated-342"></td></tr>
+                        <tr data-busid="343"><td>343</td><td>UJ 2647</td><td id="route-343"></td><td id="direction-343"></td><td id="last-updated-343"></td></tr>
+                        <tr data-busid="344"><td>344</td><td>UH 8913</td><td id="route-344"></td><td id="direction-344"></td><td id="last-updated-344"></td></tr>
+                        <tr data-busid="345"><td>345</td><td>UH 9727</td><td id="route-345"></td><td id="direction-345"></td><td id="last-updated-345"></td></tr>
+                        <tr data-busid="346"><td>346</td><td>UJ 4441</td><td id="route-346"></td><td id="direction-346"></td><td id="last-updated-346"></td></tr>
+                        <tr data-busid="347"><td>347</td><td>UH 9756</td><td id="route-347"></td><td id="direction-347"></td><td id="last-updated-347"></td></tr>
+                        <tr data-busid="348"><td>348</td><td>UH 9026</td><td id="route-348"></td><td id="direction-348"></td><td id="last-updated-348"></td></tr>
+                        <tr data-busid="349"><td>349</td><td>UJ 3318</td><td id="route-349"></td><td id="direction-349"></td><td id="last-updated-349"></td></tr>
+                        <tr data-busid="350"><td>350</td><td>UJ 7924</td><td id="route-350"></td><td id="direction-350"></td><td id="last-updated-350"></td></tr>
+                        <tr data-busid="351"><td>351</td><td>UJ 8437</td><td id="route-351"></td><td id="direction-351"></td><td id="last-updated-351"></td></tr>
+                        <tr data-busid="352"><td>352</td><td>UJ 6811</td><td id="route-352"></td><td id="direction-352"></td><td id="last-updated-352"></td></tr>
+                        <tr data-busid="353"><td>353</td><td>UL 2016</td><td id="route-353"></td><td id="direction-353"></td><td id="last-updated-353"></td></tr>
+                        <tr data-busid="354"><td>354</td><td>UL 1305</td><td id="route-354"></td><td id="direction-354"></td><td id="last-updated-354"></td></tr>
+                        <tr data-busid="355"><td>355</td><td>UL 671</td><td id="route-355"></td><td id="direction-355"></td><td id="last-updated-355"></td></tr>
+                        <tr data-busid="356"><td>356</td><td>UL 9577</td><td id="route-356"></td><td id="direction-356"></td><td id="last-updated-356"></td></tr>
+                        <tr data-busid="357"><td>357</td><td>UL 9969</td><td id="route-357"></td><td id="direction-357"></td><td id="last-updated-357"></td></tr>
+                        <tr data-busid="358"><td>358</td><td>UL 8770</td><td id="route-358"></td><td id="direction-358"></td><td id="last-updated-358"></td></tr>
+                        <tr data-busid="359"><td>359</td><td>UL 9538</td><td id="route-359"></td><td id="direction-359"></td><td id="last-updated-359"></td></tr>
+                        <tr data-busid="360"><td>360</td><td>UM 4285</td><td id="route-360"></td><td id="direction-360"></td><td id="last-updated-360"></td></tr>
+                        <tr data-busid="361"><td>361</td><td>UM 2517</td><td id="route-361"></td><td id="direction-361"></td><td id="last-updated-361"></td></tr>
+                        <tr data-busid="362"><td>362</td><td>UM 3660</td><td id="route-362"></td><td id="direction-362"></td><td id="last-updated-362"></td></tr>
+                        <tr data-busid="363"><td>363</td><td>UM 6307</td><td id="route-363"></td><td id="direction-363"></td><td id="last-updated-363"></td></tr>
+                        <tr data-busid="364"><td>364</td><td>UM 6003</td><td id="route-364"></td><td id="direction-364"></td><td id="last-updated-364"></td></tr>
+                        <tr data-busid="365"><td>365</td><td>UV 2460</td><td id="route-365"></td><td id="direction-365"></td><td id="last-updated-365"></td></tr>
+                        <tr data-busid="366"><td>366</td><td>UP 5226</td><td id="route-366"></td><td id="direction-366"></td><td id="last-updated-366"></td></tr>
+                        <tr data-busid="367"><td>367</td><td>UP 5767</td><td id="route-367"></td><td id="direction-367"></td><td id="last-updated-367"></td></tr>
+                        <tr data-busid="368"><td>368</td><td>UP 4987</td><td id="route-368"></td><td id="direction-368"></td><td id="last-updated-368"></td></tr>
+                        <tr data-busid="369"><td>369</td><td>UR 6073</td><td id="route-369"></td><td id="direction-369"></td><td id="last-updated-369"></td></tr>
+                        <tr data-busid="370"><td>370</td><td>UR 6078</td><td id="route-370"></td><td id="direction-370"></td><td id="last-updated-370"></td></tr>
+                        <tr data-busid="371"><td>371</td><td>UT 7522</td><td id="route-371"></td><td id="direction-371"></td><td id="last-updated-371"></td></tr>
+                        <tr data-busid="372"><td>372</td><td>UT 7816</td><td id="route-372"></td><td id="direction-372"></td><td id="last-updated-372"></td></tr>
+                        <tr data-busid="373"><td>373</td><td>UT 7113</td><td id="route-373"></td><td id="direction-373"></td><td id="last-updated-373"></td></tr>
+                        <tr data-busid="374"><td>374</td><td>UU 8713</td><td id="route-374"></td><td id="direction-374"></td><td id="last-updated-374"></td></tr>
+                        <tr data-busid="375"><td>375</td><td>UU 9137</td><td id="route-375"></td><td id="direction-375"></td><td id="last-updated-375"></td></tr>
+                        <tr data-busid="376"><td>376</td><td>UY 5282</td><td id="route-376"></td><td id="direction-376"></td><td id="last-updated-376"></td></tr>
+                        <tr data-busid="377"><td>377</td><td>UY 4870</td><td id="route-377"></td><td id="direction-377"></td><td id="last-updated-377"></td></tr>
+                        <tr data-busid="378"><td>378</td><td>UY 9286</td><td id="route-378"></td><td id="direction-378"></td><td id="last-updated-378"></td></tr>
+                        <tr data-busid="379"><td>379</td><td>UZ 216</td><td id="route-379"></td><td id="direction-379"></td><td id="last-updated-379"></td></tr>
+                        <tr data-busid="380"><td>380</td><td>VB 6400</td><td id="route-380"></td><td id="direction-380"></td><td id="last-updated-380"></td></tr>
+                        <tr data-busid="381"><td>381</td><td>VB 4731</td><td id="route-381"></td><td id="direction-381"></td><td id="last-updated-381"></td></tr>
+                        <tr data-busid="382"><td>382</td><td>VB 6101</td><td id="route-382"></td><td id="direction-382"></td><td id="last-updated-382"></td></tr>
+                        <tr data-busid="383"><td>383</td><td>VC 9776</td><td id="route-383"></td><td id="direction-383"></td><td id="last-updated-383"></td></tr>
+                        <tr data-busid="384"><td>384</td><td>VD 5529</td><td id="route-384"></td><td id="direction-384"></td><td id="last-updated-384"></td></tr>
+                        <tr data-busid="385"><td>385</td><td>VD 6493</td><td id="route-385"></td><td id="direction-385"></td><td id="last-updated-385"></td></tr>
+                        <tr data-busid="386"><td>386</td><td>VE 2956</td><td id="route-386"></td><td id="direction-386"></td><td id="last-updated-386"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="model-section" id="section-E500MMC_11.3m">
+                <table class="model-table" id="table-E500MMC_11.3m">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="504"><td>504</td><td>SE 5526</td><td id="route-504"></td><td id="direction-504"></td><td id="last-updated-504"></td></tr>
+                        <tr data-busid="505"><td>505</td><td>SE 6425</td><td id="route-505"></td><td id="direction-505"></td><td id="last-updated-505"></td></tr>
+                        <tr data-busid="506"><td>506</td><td>SE 5999</td><td id="route-506"></td><td id="direction-506"></td><td id="last-updated-506"></td></tr>
+                        <tr data-busid="507"><td>507</td><td>SE 6500</td><td id="route-507"></td><td id="direction-507"></td><td id="last-updated-507"></td></tr>
+                        <tr data-busid="508"><td>508</td><td>SE 5177</td><td id="route-508"></td><td id="direction-508"></td><td id="last-updated-508"></td></tr>
+                        <tr data-busid="509"><td>509</td><td>SE 5163</td><td id="route-509"></td><td id="direction-509"></td><td id="last-updated-509"></td></tr>
+                        <tr data-busid="510"><td>510</td><td>SS 7944</td><td id="route-510"></td><td id="direction-510"></td><td id="last-updated-510"></td></tr>
+                        <tr data-busid="511"><td>511</td><td>SS 8057</td><td id="route-511"></td><td id="direction-511"></td><td id="last-updated-511"></td></tr>
+                        <tr data-busid="512"><td>512</td><td>SS 5951</td><td id="route-512"></td><td id="direction-512"></td><td id="last-updated-512"></td></tr>
+                        <tr data-busid="513"><td>513</td><td>ST 5900</td><td id="route-513"></td><td id="direction-513"></td><td id="last-updated-513"></td></tr>
+                        <tr data-busid="514"><td>514</td><td>ST 5996</td><td id="route-514"></td><td id="direction-514"></td><td id="last-updated-514"></td></tr>
+                        <tr data-busid="515"><td>515</td><td>SX 1035</td><td id="route-515"></td><td id="direction-515"></td><td id="last-updated-515"></td></tr>
+                        <tr data-busid="516"><td>516</td><td>SX 529</td><td id="route-516"></td><td id="direction-516"></td><td id="last-updated-516"></td></tr>
+                        <tr data-busid="517"><td>517</td><td>SX 2027</td><td id="route-517"></td><td id="direction-517"></td><td id="last-updated-517"></td></tr>
+                        <tr data-busid="518"><td>518</td><td>TF 8478</td><td id="route-518"></td><td id="direction-518"></td><td id="last-updated-518"></td></tr>
+                        <tr data-busid="519"><td>519</td><td>TH 4482</td><td id="route-519"></td><td id="direction-519"></td><td id="last-updated-519"></td></tr>
+                        <tr data-busid="520"><td>520</td><td>TJ 5864</td><td id="route-520"></td><td id="direction-520"></td><td id="last-updated-520"></td></tr>
+                        <tr data-busid="521"><td>521</td><td>TK 5086</td><td id="route-521"></td><td id="direction-521"></td><td id="last-updated-521"></td></tr>
+                        <tr data-busid="522"><td>522</td><td>TP 4605</td><td id="route-522"></td><td id="direction-522"></td><td id="last-updated-522"></td></tr>
+                        <tr data-busid="523"><td>523</td><td>TP 5257</td><td id="route-523"></td><td id="direction-523"></td><td id="last-updated-523"></td></tr>
+                        <tr data-busid="524"><td>524</td><td>TP 6265</td><td id="route-524"></td><td id="direction-524"></td><td id="last-updated-524"></td></tr>
+                        <tr data-busid="528"><td>528</td><td>TS 8442</td><td id="route-528"></td><td id="direction-528"></td><td id="last-updated-528"></td></tr>
+                        <tr data-busid="529"><td>529</td><td>TT 8108</td><td id="route-529"></td><td id="direction-529"></td><td id="last-updated-529"></td></tr>
+                        <tr data-busid="531"><td>531</td><td>TV 7565</td><td id="route-531"></td><td id="direction-531"></td><td id="last-updated-531"></td></tr>
+                        <tr data-busid="532"><td>532</td><td>TV 6629</td><td id="route-532"></td><td id="direction-532"></td><td id="last-updated-532"></td></tr>
+                        <tr data-busid="533"><td>533</td><td>TV 6778</td><td id="route-533"></td><td id="direction-533"></td><td id="last-updated-533"></td></tr>
+                        <tr data-busid="534"><td>534</td><td>TV 9442</td><td id="route-534"></td><td id="direction-534"></td><td id="last-updated-534"></td></tr>
+                        <tr data-busid="535"><td>535</td><td>TV 9465</td><td id="route-535"></td><td id="direction-535"></td><td id="last-updated-535"></td></tr>
+                        <tr data-busid="536"><td>536</td><td>TW 455</td><td id="route-536"></td><td id="direction-536"></td><td id="last-updated-536"></td></tr>
+                        <tr data-busid="537"><td>537</td><td>TV 9066</td><td id="route-537"></td><td id="direction-537"></td><td id="last-updated-537"></td></tr>
+                        <tr data-busid="538"><td>538</td><td>VD 6480</td><td id="route-538"></td><td id="direction-538"></td><td id="last-updated-538"></td></tr>
+                        <tr data-busid="539"><td>539</td><td>VD 5694</td><td id="route-539"></td><td id="direction-539"></td><td id="last-updated-539"></td></tr>
+                        <tr data-busid="541"><td>541</td><td>VE 3584</td><td id="route-541"></td><td id="direction-541"></td><td id="last-updated-541"></td></tr>
+                        <tr data-busid="542"><td>542</td><td>VE 4425</td><td id="route-542"></td><td id="direction-542"></td><td id="last-updated-542"></td></tr>
+                        <tr><td>543</td><td>VE 2830</td><td></td><td></td><td>已退役：5/5/2020</td></tr>
+                        <tr data-busid="544"><td>544</td><td>VL 5981</td><td id="route-544"></td><td id="direction-544"></td><td id="last-updated-544"></td></tr>
+                        <tr data-busid="545"><td>545</td><td>VN 2873</td><td id="route-545"></td><td id="direction-545"></td><td id="last-updated-545"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="model-section" id="section-E500MMCFL_11.3m">
+                <table class="model-table" id="table-E500MMCFL_11.3m">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="546"><td>546</td><td>XF 3414</td><td id="route-546"></td><td id="direction-546"></td><td id="last-updated-546"></td></tr>
+                        <tr data-busid="547"><td>547</td><td>XF 2507</td><td id="route-547"></td><td id="direction-547"></td><td id="last-updated-547"></td></tr>
+                        <tr data-busid="548"><td>548</td><td>XF 4490</td><td id="route-548"></td><td id="direction-548"></td><td id="last-updated-548"></td></tr>
+                        <tr data-busid="549"><td>549</td><td>XF 2977</td><td id="route-549"></td><td id="direction-549"></td><td id="last-updated-549"></td></tr>
+                        <tr data-busid="550"><td>550</td><td>ZH 5389</td><td id="route-550"></td><td id="direction-550"></td><td id="last-updated-550"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="model-section" id="section-E500_12m">
+                <table class="model-table" id="table-E500_12m">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="801"><td>801</td><td>NE 5930</td><td id="route-801"></td><td id="direction-801"></td><td>已退役：2/12/2024</td></tr>
+                        <tr data-busid="802"><td>802</td><td>NF 6585</td><td id="route-802"></td><td id="direction-802"></td><td>已退役：10/12/2024</td></tr>
+                        <tr data-busid="803"><td>803</td><td>NF 9815</td><td id="route-803"></td><td id="direction-803"></td><td>已退役：5/1/2026</td></tr>
+                        <tr data-busid="804"><td>804</td><td>NF 9153</td><td id="route-804"></td><td id="direction-804"></td><td>已退役：23/12/2024</td></tr>
+                        <tr data-busid="805"><td>805</td><td>NG 8400</td><td id="route-805"></td><td id="direction-805"></td><td>已退役：23/1/2025</td></tr>
+                        <tr data-busid="806"><td>806</td><td>NG 7406</td><td id="route-806"></td><td id="direction-806"></td><td>已退役：25/3/2025</td></tr>
+                        <tr data-busid="807"><td>807</td><td>NH 776</td><td id="route-807"></td><td id="direction-807"></td><td>已退役：2/4/2025</td></tr>
+                        <tr data-busid="808"><td>808</td><td>NH 2643</td><td id="route-808"></td><td id="direction-808"></td><td>已退役：24/4/2025</td></tr>
+                        <tr data-busid="809"><td>809</td><td>NH 2745</td><td id="route-809"></td><td id="direction-809"></td><td>已退役：9/4/2025</td></tr>
+                        <tr data-busid="810"><td>810</td><td>NU 3439</td><td id="route-810"></td><td id="direction-810"></td><td>已退役：15/4/2026</td></tr>
+                        <tr data-busid="811"><td>811</td><td>NU 9816</td><td id="route-811"></td><td id="direction-811"></td><td>已退役：12/5/2026</td></tr>
+                        <tr data-busid="812"><td>812</td><td>NU 8940</td><td id="route-812"></td><td id="direction-812"></td><td>已退役：15/3/2025</td></tr>
+                        <tr data-busid="813"><td>813</td><td>NU 9852</td><td id="route-813"></td><td id="direction-813"></td><td>已退役：12/5/2026</td></tr>
+                        <tr data-busid="814"><td>814</td><td>NU 8805</td><td id="route-814"></td><td id="direction-814"></td><td>已退役：12/5/2026</td></tr>
+                        <tr data-busid="815"><td>815</td><td>NW 1524</td><td id="route-815"></td><td id="direction-815"></td><td>已退役：24/6/2026</td></tr>
+                        <tr data-busid="816"><td>816</td><td>NW 2333</td><td id="route-816"></td><td id="direction-816"></td><td>已退役：18/6/2026</td></tr>
+                        <tr data-busid="817"><td>817</td><td>NW 3480</td><td id="route-817"></td><td id="direction-817"></td><td>已退役：24/6/2026</td></tr>
+                        <tr data-busid="818"><td>818</td><td>NW 6906</td><td id="route-818"></td><td id="direction-818"></td><td>已退役：15/7/2026</td></tr>
+                        <tr data-busid="819"><td>819</td><td>NW 6826</td><td id="route-819"></td><td id="direction-819"></td><td>已退役：15/7/2026</td></tr>
+                        <tr data-busid="820"><td>820</td><td>NW 8224</td><td id="route-820"></td><td id="direction-820"></td><td>已退役：13/7/2026</td></tr>
+                        <tr data-busid="821"><td>821</td><td>NX 3790</td><td id="route-821"></td><td id="direction-821"></td><td>已退役：5/8/2026</td></tr>
+                        <tr data-busid="822"><td>822</td><td>NX 4438</td><td id="route-822"></td><td id="direction-822"></td><td>已退役：6/8/2026</td></tr>
+                        <tr data-busid="823"><td>823</td><td>NX 3837</td><td id="route-823"></td><td id="direction-823"></td><td>已退役：5/8/2026</td></tr>
+                        <tr data-busid="824"><td>824</td><td>NX 8813</td><td id="route-824"></td><td id="direction-824"></td><td id="last-updated-824"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="model-section" id="section-E500_11.3m">
+                <table class="model-table" id="table-E500_11.3m">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="825"><td>825</td><td>RR 8145</td><td id="route-825"></td><td id="direction-825"></td><td id="last-updated-825"></td></tr>
+                        <tr data-busid="826"><td>826</td><td>RR 7897</td><td id="route-826"></td><td id="direction-826"></td><td id="last-updated-826"></td></tr>
+                        <tr data-busid="827"><td>827</td><td>RT 1670</td><td id="route-827"></td><td id="direction-827"></td><td id="last-updated-827"></td></tr>
+                        <tr data-busid="828"><td>828</td><td>RT 2217</td><td id="route-828"></td><td id="direction-828"></td><td id="last-updated-828"></td></tr>
+                        <tr data-busid="829"><td>829</td><td>RT 1907</td><td id="route-829"></td><td id="direction-829"></td><td id="last-updated-829"></td></tr>
+                        <tr data-busid="830"><td>830</td><td>RU 8323</td><td id="route-830"></td><td id="direction-830"></td><td id="last-updated-830"></td></tr>
+                        <tr data-busid="831"><td>831</td><td>RU 6727</td><td id="route-831"></td><td id="direction-831"></td><td id="last-updated-831"></td></tr>
+                        <tr data-busid="832"><td>832</td><td>RU 6900</td><td id="route-832"></td><td id="direction-832"></td><td id="last-updated-832"></td></tr>
+                        <tr data-busid="833"><td>833</td><td>RU 8176</td><td id="route-833"></td><td id="direction-833"></td><td id="last-updated-833"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="model-section" id="section-E500MMCFL_12m">
+                <table class="model-table" id="table-E500MMCFL_12m">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="860"><td>860</td><td>YD 8329</td><td id="route-860"></td><td id="direction-860"></td><td id="last-updated-860"></td></tr>
+                        <tr data-busid="861"><td>861</td><td>YD 8109</td><td id="route-861"></td><td id="direction-861"></td><td id="last-updated-861"></td></tr>
+                        <tr data-busid="862"><td>862</td><td>YD 6939</td><td id="route-862"></td><td id="direction-862"></td><td id="last-updated-862"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="model-section" id="section-E200">
+                <table class="model-table" id="table-E200">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="901"><td>901</td><td>NM 4716</td><td id="route-901"></td><td id="direction-901"></td><td>已退役：26/8/2025</td></tr>
+                        <tr data-busid="902"><td>902</td><td>NM 4760</td><td id="route-902"></td><td id="direction-902"></td><td>已退役：26/8/2025</td></tr>
+                        <tr data-busid="903"><td>903</td><td>NP 7825</td><td id="route-903"></td><td id="direction-903"></td><td>已退役：5/11/2025</td></tr>
+                        <tr data-busid="904"><td>904</td><td>NP 8088</td><td id="route-904"></td><td id="direction-904"></td><td>已退役：5/11/2025</td></tr>
+                        <tr data-busid="905"><td>905</td><td>NR 5800</td><td id="route-905"></td><td id="direction-905"></td><td>已退役：10/12/2025</td></tr>
+                        <tr data-busid="906"><td>906</td><td>NR 1096</td><td id="route-906"></td><td id="direction-906"></td><td>已退役：10/12/2025</td></tr>
+                        <tr data-busid="907"><td>907</td><td>NR 1633</td><td id="route-907"></td><td id="direction-907"></td><td>已退役：24/11/2025</td></tr>
+                        <tr data-busid="908"><td>908</td><td>NS 577</td><td id="route-908"></td><td id="direction-908"></td><td>已退役：22/12/2025</td></tr>
+                        <tr data-busid="909"><td>909</td><td>NT 2693</td><td id="route-909"></td><td id="direction-909"></td><td>已退役：5/3/2026</td></tr>
+                        <tr data-busid="910"><td>910</td><td>NS 1189</td><td id="route-910"></td><td id="direction-910"></td><td>已退役：22/12/2025</td></tr>
+                        <tr data-busid="911"><td>911</td><td>NS 7357</td><td id="route-911"></td><td id="direction-911"></td><td id="last-updated-911"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="model-section" id="section-E500EV">
+                <table class="model-table" id="table-E500EV">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>車牌</th>
+                            <th>路線</th>
+                            <th>方向</th>
+                            <th>最後更新</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-busid="Z01"><td>Z01</td><td>ZF 2271</td><td id="route-Z01"></td><td id="direction-Z01"></td><td id="last-updated-Z01"></td></tr>
+                        <tr data-busid="Z02"><td>Z02</td><td>ZU 5915</td><td id="route-Z02"></td><td id="direction-Z02"></td><td id="last-updated-Z02"></td></tr>
+                        <tr data-busid="Z03"><td>Z03</td><td>ZU 8662</td><td id="route-Z03"></td><td id="direction-Z03"></td><td id="last-updated-Z03"></td></tr>
+                        <tr data-busid="Z04"><td>Z04</td><td>ZV 2707</td><td id="route-Z04"></td><td id="direction-Z04"></td><td id="last-updated-Z04"></td></tr>
+                        <tr data-busid="Z05"><td>Z05</td><td>ZW 4440</td><td id="route-Z05"></td><td id="direction-Z05"></td><td id="last-updated-Z05"></td></tr>
+                        <tr data-busid="Z06"><td>Z06</td><td>ZY 6697</td><td id="route-Z06"></td><td id="direction-Z06"></td><td id="last-updated-Z06"></td></tr>
+                        <tr data-busid="Z07"><td>Z07</td><td>ZY 8700</td><td id="route-Z07"></td><td id="direction-Z07"></td><td id="last-updated-Z07"></td></tr>
+                        <tr data-busid="Z08"><td>Z08</td><td>WA 9309</td><td id="route-Z08"></td><td id="direction-Z08"></td><td id="last-updated-Z08"></td></tr>
+                        <tr data-busid="Z09"><td>Z09</td><td>ZZ 5997</td><td id="route-Z09"></td><td id="direction-Z09"></td><td id="last-updated-Z09"></td></tr>
+                        <tr data-busid="Z10"><td>Z10</td><td>WA 9751</td><td id="route-Z10"></td><td id="direction-Z10"></td><td id="last-updated-Z10"></td></tr>
+                        <tr data-busid="Z11"><td>Z11</td><td>ZW 2746</td><td id="route-Z11"></td><td id="direction-Z11"></td><td id="last-updated-Z11"></td></tr>
+                        <tr data-busid="Z12"><td>Z12</td><td>WK 2514</td><td id="route-Z12"></td><td id="direction-Z12"></td><td id="last-updated-Z12"></td></tr>
+                        <tr data-busid="Z13"><td>Z13</td><td>WS 3658</td><td id="route-Z13"></td><td id="direction-Z13"></td><td id="last-updated-Z13"></td></tr>
+                        <tr data-busid="Z14"><td>Z14</td><td>WR 4142</td><td id="route-Z14"></td><td id="direction-Z14"></td><td id="last-updated-Z14"></td></tr>
+                        <tr data-busid="Z15"><td>Z15</td><td>WU 1051</td><td id="route-Z15"></td><td id="direction-Z15"></td><td id="last-updated-Z15"></td></tr>
+                        <tr data-busid="Z16"><td>Z16</td><td>WU 1251</td><td id="route-Z16"></td><td id="direction-Z16"></td><td id="last-updated-Z16"></td></tr>
+                        <tr data-busid="Z17"><td>Z17</td><td>WU 1801</td><td id="route-Z17"></td><td id="direction-Z17"></td><td id="last-updated-Z17"></td></tr>
+                        <tr data-busid="Z18"><td>Z18</td><td>WU 8351</td><td id="route-Z18"></td><td id="direction-Z18"></td><td id="last-updated-Z18"></td></tr>
+                        <tr data-busid="Z19"><td>Z19</td><td>WU 8582</td><td id="route-Z19"></td><td id="direction-Z19"></td><td id="last-updated-Z19"></td></tr>
+                        <tr data-busid="Z20"><td>Z20</td><td>VC 7542</td><td id="route-Z20"></td><td id="direction-Z20"></td><td id="last-updated-Z20"></td></tr>
+                        <tr data-busid="Z21"><td>Z21</td><td>VA 1274</td><td id="route-Z21"></td><td id="direction-Z21"></td><td id="last-updated-Z21"></td></tr>
+                        <tr data-busid="Z22"><td>Z22</td><td>VF 1043</td><td id="route-Z22"></td><td id="direction-Z22"></td><td id="last-updated-Z22"></td></tr>
+                        <tr data-busid="Z23"><td>Z23</td><td>VH 4296</td><td id="route-Z23"></td><td id="direction-Z23"></td><td id="last-updated-Z23"></td></tr>
+                        <tr data-busid="Z24"><td>Z24</td><td>VH 4983</td><td id="route-Z24"></td><td id="direction-Z24"></td><td id="last-updated-Z24"></td></tr>
+                        <tr data-busid="Z25"><td>Z25</td><td>VH 4376</td><td id="route-Z25"></td><td id="direction-Z25"></td><td id="last-updated-Z25"></td></tr>
+                        <tr data-busid="Z26"><td>Z26</td><td>VK 1251</td><td id="route-Z26"></td><td id="direction-Z26"></td><td id="last-updated-Z26"></td></tr>
+                        <tr data-busid="Z27"><td>Z27</td><td>VK 1838</td><td id="route-Z27"></td><td id="direction-Z27"></td><td id="last-updated-Z27"></td></tr>
+                        <tr data-busid="Z28"><td>Z28</td><td>VK 541</td><td id="route-Z28"></td><td id="direction-Z28"></td><td id="last-updated-Z28"></td></tr>
+                        <tr data-busid="Z29"><td>Z29</td><td>VL 5941</td><td id="route-Z29"></td><td id="direction-Z29"></td><td id="last-updated-Z29"></td></tr>
+                        <tr data-busid="Z30"><td>Z30</td><td>VL 4140</td><td id="route-Z30"></td><td id="direction-Z30"></td><td id="last-updated-Z30"></td></tr>
+                        <tr data-busid="Z31"><td>Z31</td><td>VL 6642</td><td id="route-Z31"></td><td id="direction-Z31"></td><td id="last-updated-Z31"></td></tr>
+                        <tr data-busid="Z32"><td>Z32</td><td>VM 8701</td><td id="route-Z32"></td><td id="direction-Z32"></td><td id="last-updated-Z32"></td></tr>
+                        <tr data-busid="Z33"><td>Z33</td><td>VM 9242</td><td id="route-Z33"></td><td id="direction-Z33"></td><td id="last-updated-Z33"></td></tr>
+                        <tr data-busid="Z34"><td>Z34</td><td>VM 9058</td><td id="route-Z34"></td><td id="direction-Z34"></td><td id="last-updated-Z34"></td></tr>
+                        <tr data-busid="Z35"><td>Z35</td><td>__ ____</td><td id="route-Z35"></td><td id="direction-Z35"></td><td id="last-updated-Z35"></td></tr>
+                        <tr data-busid="Z36"><td>Z36</td><td>__ ____</td><td id="route-Z36"></td><td id="direction-Z36"></td><td id="last-updated-Z36"></td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</body>
+<script src="main.js"></script>
+</html>
